@@ -19,8 +19,8 @@ async function getProducts(req, res){
     const name = req.query.name || "";
     const minPrice = parseFloat(req.query.minPrice) || 0;
     const maxPrice = parseFloat(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
-    const page = req.query.page?parseInt(req.query.page)-1: 0;
-    const limit = parseInt(req.query.limit) || 0;
+    const page = req.query.page ? parseInt(req.query.page)-1: 0;
+    const limit = parseInt(req.query.limit) || 3;
     try{
         const products = await Product.find({
             name: { $regex: name, $options: "i" }, // "i" for case-insensitive
@@ -33,10 +33,9 @@ async function getProducts(req, res){
     }
 }
 
-function getProductById(req, res){
+async function getProductById(req, res){
     const {id} = req.params;
-    const products = [...PRODUCTS]
-    const product = products.find(product => product._id == id);
+    const product = await Product.findById(id);
     res.status(200).json(product);
 }
 
